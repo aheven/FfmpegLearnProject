@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.SurfaceHolder
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.ImageUtils
 import heven.holt.ffmpeg.R
+import heven.holt.ffmpeg.utils.ImageUtils
 import kotlinx.android.synthetic.main.activity_draw_bitmap.*
 
 class DrawBitmapActivity : AppCompatActivity() {
@@ -26,7 +26,7 @@ class DrawBitmapActivity : AppCompatActivity() {
     }
 
     private fun initImageView() {
-        image_view.setImageBitmap(ImageUtils.getBitmap(R.mipmap.ic_launcher))
+        image_view.setImageBitmap(ImageUtils.getBitmap(this, R.mipmap.ic_launcher))
     }
 
     private fun initSurfaceView() {
@@ -52,7 +52,8 @@ class DrawBitmapActivity : AppCompatActivity() {
                     isAntiAlias = true
                     style = Paint.Style.FILL
                 }
-                val bitmap = ImageUtils.getBitmap(R.mipmap.ic_launcher)
+                val bitmap =
+                    ImageUtils.getBitmap(this@DrawBitmapActivity, R.mipmap.ic_launcher) ?: return
 
                 //设置surfaceView控件的大小
                 val layoutParams = surface_view.layoutParams

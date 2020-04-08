@@ -6,8 +6,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import com.blankj.utilcode.util.ImageUtils
 import heven.holt.ffmpeg.R
+import heven.holt.ffmpeg.utils.ImageUtils
 
 /**
  *Time:2020/4/7
@@ -25,10 +25,10 @@ class CustomDrawBitmapView(
 
     constructor(context: Context) : this(context, null)
 
-    private val bitmap: Bitmap = ImageUtils.getBitmap(R.mipmap.ic_launcher)
+    private val bitmap: Bitmap? = ImageUtils.getBitmap(context, R.mipmap.ic_launcher)
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawBitmap(bitmap, 0f, 0f, paint)
+        bitmap?.let { canvas?.drawBitmap(it, 0f, 0f, paint) }
     }
 }
