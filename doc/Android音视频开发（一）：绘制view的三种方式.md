@@ -103,5 +103,5 @@ class CustomDrawBitmapView(
 
 
 
-[^本章涉及类]: `DrawBitmapActivity``CustomDrawBitmapView``ImageUtils`
+> 本章涉及类：`ImageUtils`、`CustomDrawBitmapView`、`DrawBitmapActivity`
 
