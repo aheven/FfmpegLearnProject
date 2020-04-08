@@ -70,20 +70,35 @@ AudioRecord的官方解释为：
          声道在AudioFormat中具体参数有：
    
          >public static final int CHANNEL_IN_LEFT = 0x4;//左声道
+         >
          >public static final int CHANNEL_IN_RIGHT = 0x8;//右声道
+         >
          >public static final int CHANNEL_IN_FRONT = 0x10;//前声道
+         >
          >public static final int CHANNEL_IN_BACK = 0x20;//后声道
+         >
          >public static final int CHANNEL_IN_LEFT_PROCESSED = 0x40;
+         >
          >public static final int CHANNEL_IN_RIGHT_PROCESSED = 0x80;
+         >
          >public static final int CHANNEL_IN_FRONT_PROCESSED = 0x100;
+         >
          >public static final int CHANNEL_IN_BACK_PROCESSED = 0x200;
+         >
          >public static final int CHANNEL_IN_PRESSURE = 0x400;
+         >
          >public static final int CHANNEL_IN_X_AXIS = 0x800;
+         >
          >public static final int CHANNEL_IN_Y_AXIS = 0x1000;
+         >
          >public static final int CHANNEL_IN_Z_AXIS = 0x2000;
+         >
          >public static final int CHANNEL_IN_VOICE_UPLINK = 0x4000;
+         >
          >public static final int CHANNEL_IN_VOICE_DNLINK = 0x8000;
+         >
          >public static final int CHANNEL_IN_MONO = CHANNEL_IN_FRONT;//单声道
+         >
          >public static final int CHANNEL_IN_STEREO = (CHANNEL_IN_LEFT | CHANNEL_IN_RIGHT);//立体声道(左右声道)
    
    3. audioFormat，音频格式，表示音频数据的格式，一般手机设备可能只支持16位PCM编码，如果其他的都会报错位坏值。
