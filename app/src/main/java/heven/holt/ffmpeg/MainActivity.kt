@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemClickListener
 import heven.holt.ffmpeg.adapter.MainAdapter
 import heven.holt.ffmpeg.ui.AudioRecordActivity
+import heven.holt.ffmpeg.ui.AudioTrackActivity
 import heven.holt.ffmpeg.ui.DrawBitmapActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun initRecyclerView() {
-        val data = mutableListOf("三种方式绘制图片", "AudioRecord录制音频")
+        val data = mutableListOf("三种方式绘制图片", "AudioRecord录制音频", "AudioTrack播放音频")
         recycler_view.layoutManager = LinearLayoutManager(this)
         val mainAdapter = MainAdapter(data)
         recycler_view.adapter = mainAdapter
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     })
                     .request()
             }
+            2 -> AudioTrackActivity.startAtc()
         }
     }
 }
