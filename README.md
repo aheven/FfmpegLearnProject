@@ -8,4 +8,6 @@ doc文档：/doc/...
 
 [Android音视频开发（三）：使用AudioTrack播放PCM音频](/doc/Android音视频开发（三）：使用AudioTrack播放PCM音频.md)
 
+[Android音视频开发（四）：使用Camera采集视频数据](/doc/Android音视频开发（四）：使用Camera采集视频数据.md)
+
 project: /app/...

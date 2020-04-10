@@ -3,6 +3,7 @@
     package="heven.holt.ffmpeg">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
@@ -12,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.AudioTrackActivity"></activity>
+        <activity android:name=".ui.Camera2Activity"></activity>
+        <activity android:name=".ui.CameraActivity" />
+        <activity android:name=".ui.AudioTrackActivity" />
         <activity android:name=".ui.AudioRecordActivity" />
         <activity android:name=".ui.DrawBitmapActivity" />
         <activity android:name=".MainActivity">

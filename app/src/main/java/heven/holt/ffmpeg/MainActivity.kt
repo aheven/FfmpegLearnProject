@@ -9,9 +9,7 @@ import com.blankj.utilcode.util.PermissionUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemClickListener
 import heven.holt.ffmpeg.adapter.MainAdapter
-import heven.holt.ffmpeg.ui.AudioRecordActivity
-import heven.holt.ffmpeg.ui.AudioTrackActivity
-import heven.holt.ffmpeg.ui.DrawBitmapActivity
+import heven.holt.ffmpeg.ui.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -30,7 +28,11 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun initRecyclerView() {
-        val data = mutableListOf("三种方式绘制图片", "AudioRecord录制音频", "AudioTrack播放音频")
+        val data =
+            mutableListOf(
+                "三种方式绘制图片", "AudioRecord录制音频", "AudioTrack播放音频", "使用 Camera API 采集视频数据",
+                "使用 Camera2 API 采集视频数据"
+            )
         recycler_view.layoutManager = LinearLayoutManager(this)
         val mainAdapter = MainAdapter(data)
         recycler_view.adapter = mainAdapter
@@ -56,6 +58,34 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     .request()
             }
             2 -> AudioTrackActivity.startAtc()
+            3 -> {
+                PermissionUtils.permission(
+                    PermissionConstants.CAMERA
+                )
+                    .callback(object : PermissionUtils.SimpleCallback {
+                        override fun onGranted() {
+                            CameraActivity.startAtc()
+                        }
+
+                        override fun onDenied() {
+                        }
+                    })
+                    .request()
+            }
+            4 -> {
+                PermissionUtils.permission(
+                    PermissionConstants.CAMERA
+                )
+                    .callback(object : PermissionUtils.SimpleCallback {
+                        override fun onGranted() {
+                            Camera2Activity.startAtc()
+                        }
+
+                        override fun onDenied() {
+                        }
+                    })
+                    .request()
+            }
         }
     }
 }
