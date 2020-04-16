@@ -3,7 +3,11 @@ package heven.holt.ffmpeg.ui
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.ImageFormat
+import android.graphics.Matrix
+import android.graphics.RectF
+import android.graphics.SurfaceTexture
 import android.hardware.camera2.*
 import android.media.Image
 import android.media.ImageReader
@@ -13,6 +17,7 @@ import android.util.Log
 import android.util.Size
 import android.view.Surface
 import android.view.SurfaceHolder
+import android.view.TextureView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -25,7 +30,8 @@ import kotlin.math.abs
 
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class Camera2Activity : AppCompatActivity(), SurfaceHolder.Callback {
+class Camera2Activity : AppCompatActivity(), TextureView.SurfaceTextureListener,
+    SurfaceHolder.Callback {
     companion object {
         fun startAtc() {
             ActivityUtils.startActivity(Camera2Activity::class.java)
@@ -39,7 +45,8 @@ class Camera2Activity : AppCompatActivity(), SurfaceHolder.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
-        surface_view.holder.addCallback(this)
+//        surface_view.holder.addCallback(this)
+        texture_view.surfaceTextureListener = this
     }
 
     private fun openCamera() {
@@ -55,12 +62,17 @@ class Camera2Activity : AppCompatActivity(), SurfaceHolder.Callback {
 
         cameraId = cameraIdList.first()
         mPreviewSize = getMatchingSize()
-        surface_view.resize(mPreviewSize?.width?:-1,mPreviewSize?.height?:-1)
+        configureTransform(texture_view.measuredWidth, texture_view.measuredHeight)
         cameraManager.openCamera(cameraId!!, object : CameraDevice.StateCallback() {
             @RequiresApi(Build.VERSION_CODES.Q)
             override fun onOpened(camera: CameraDevice) {
-                val surfacePreview = Surface(surface_view.surfaceControl)
-                val imageReader = ImageReader.newInstance(mPreviewSize?.width?:0,mPreviewSize?.height?:0,ImageFormat.YUV_420_888,2)
+                val surfacePreview = Surface(texture_view.surfaceTexture)
+                val imageReader = ImageReader.newInstance(
+                    mPreviewSize?.width ?: 0,
+                    mPreviewSize?.height ?: 0,
+                    ImageFormat.YUV_420_888,
+                    2
+                )
                 imageReader.setOnImageAvailableListener({
                     val image: Image = it.acquireLatestImage() //最后一帧
 
@@ -86,9 +98,9 @@ class Camera2Activity : AppCompatActivity(), SurfaceHolder.Callback {
                     LogUtils.e("dataSize=${count}")
                     image.close() //一定要关闭
 
-                },null)
+                }, null)
                 camera.createCaptureSession(
-                    listOf(surfacePreview,imageReader.surface),
+                    listOf(surfacePreview, imageReader.surface),
                     object : CameraCaptureSession.StateCallback() {
                         override fun onConfigureFailed(session: CameraCaptureSession) {
                         }
@@ -126,7 +138,7 @@ class Camera2Activity : AppCompatActivity(), SurfaceHolder.Callback {
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
-        mPreviewSize = Size(surface_view.width, surface_view.height)
+//        mPreviewSize = Size(surface_view.width, surface_view.height)
         openCamera()
     }
 
@@ -139,7 +151,7 @@ class Camera2Activity : AppCompatActivity(), SurfaceHolder.Callback {
         var selectProportion = 0f
         try {
             val viewProportion =
-                surface_view.width.toFloat() / surface_view.height.toFloat() //计算View的宽高比
+                texture_view.width.toFloat() / texture_view.height.toFloat() //计算View的宽高比
             val cameraCharacteristics: CameraCharacteristics =
                 cameraManager.getCameraCharacteristics(cameraId!!)
             val streamConfigurationMap =
@@ -179,5 +191,57 @@ class Camera2Activity : AppCompatActivity(), SurfaceHolder.Callback {
             "getMatchingSize: 选择的尺寸是 宽度=" + selectSize!!.width + "高度=" + selectSize.height
         )
         return selectSize
+    }
+
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
+
+    }
+
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+    }
+
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+        return false
+    }
+
+    override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+        mPreviewSize = Size(width, height)
+        openCamera()
+    }
+
+    private fun configureTransform(viewWidth: Int, viewHeight: Int) {
+        val matrix = Matrix()
+
+
+        var aspect: Double = mPreviewSize?.width?.toDouble()!! / mPreviewSize?.height?.toDouble()!!
+
+        if (resources.configuration.orientation
+            == Configuration.ORIENTATION_PORTRAIT
+        ) {
+            aspect = 1 / aspect
+        }
+
+        val mDisplayWidth:Int
+        val mDisplayHeight:Int
+        if (viewWidth > viewHeight * aspect) {
+            mDisplayWidth = viewWidth
+            mDisplayHeight = (viewHeight * aspect + .5).toInt()
+        } else {
+            mDisplayWidth = (viewWidth / aspect + .5).toInt()
+            mDisplayHeight = viewHeight
+        }
+        val surfaceDimensions = RectF(
+            0F, 0F,
+            mDisplayWidth.toFloat(),
+            mDisplayHeight.toFloat()
+        )
+
+        val previewRect = RectF(0F, 0F, viewWidth.toFloat(), viewHeight.toFloat())
+        matrix.setRectToRect(previewRect, surfaceDimensions, Matrix.ScaleToFit.FILL);
+
+//        val maWidth = viewHeight.toFloat()*mPreviewSize!!.width/mPreviewSize!!.height
+
+//        matrix.postScale(mPreviewSize!!.width/maWidth ,1F)
+        texture_view.setTransform(matrix)
     }
 }

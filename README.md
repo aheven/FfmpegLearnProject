@@ -10,4 +10,6 @@ doc文档：/doc/...
 
 [Android音视频开发（四）：使用Camera采集视频数据](/doc/Android音视频开发（四）：使用Camera采集视频数据.md)
 
+[Android音视频开发（五）：使用Camera2采集视频数据](/doc/Android音视频开发（五）：使用Camera2采集视频数据.md)
+
 project: /app/...
